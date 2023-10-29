@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <YOUR METADATA>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: <YOUR APP NAME>
+  template:
+    metadata:
+      labels:
+        app: <YOUR APP NAME>
+    spec:
+      containers:
+      - name: <YOUR APP NAME>
+        image: <YOUR IMAGE URI>.dkr.ecr.us-west-2.amazonaws.com/practiccollie
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+# service type loadbalancer       
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: <YOUR APP NAME>
+    k8s-app: <YOUR APP NAME>
+  name: <YOUR APP NAME>
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  type: LoadBalancer
+  selector:
+    app: <YOUR APP NAME>
